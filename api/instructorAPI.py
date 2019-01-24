@@ -17,71 +17,62 @@ from util.exception import InvalidUsage
 import os,json
 
 class InstructorAPI(Resource):
-
 	@login_auth_required
 	@instructor_auth_required
 	def get(self):
-		headers = {'Content-Type': 'text/html'}
+            headers = {'Content-Type': 'text/html'}
+            
+            user = session['user']
+            user_id = session['user']['id']
+            user_email = session['user']['email']
+           
+            print("USER:", user_id, user_email)
 
-		# get user
-		user_id = session['user_id']
-		user = User.objects(id=user_id).first()
+            # get all ds
+            my_datasets = DataSet.objects(author=user_id)
+            public_datasets = DataSet.objects(privacy='public', author__ne=user_id)
+            authorized_datasets = DataSet.objects(privacy='private',collaborators__in=[user_id])
 
-		# generate new token
-		token = user.generate_auth_token()
-		redis_store.set(user_id, token)
-		session['token'] = token
+            # get all assignments
+            assignments = []
 
-		# get all ds
-		my_datasets = DataSet.objects(author=user)
-		public_datasets = DataSet.objects(privacy='public', author__ne=user)
-		authorized_datasets = DataSet.objects(privacy='private',collaborators__in=[user])
-		
-		# get all classes
-		classes = []
-		for class_ in Class.objects(instructor=user.name):
-			classes.append(class_.name)
+            assignment_names = Assignment.objects(instructor=user_id).aggregate({
+                '$group': { '_id': '$name'}
+            })
 
-		# get all assignments
-		assignments = []
+            assignment_names = list(assignment_names)
 
-		assignment_names = Assignment.objects(instructor=user).aggregate({
-		    '$group': { '_id': '$name'}
-		})
+            # get all incomplete assignments
+            incomplete_numbers = []
 
-		assignment_names = list(assignment_names)
+            for assignment_name in assignment_names:
+                    assignment_name = assignment_name['_id']
 
-		# get all incomplete assignments
-		incomplete_numbers = []
+                    assignment = Assignment.objects(name=assignment_name, instructor=user_id).first()
 
-		for assignment_name in assignment_names:
-			assignment_name = assignment_name['_id']
+                    # get judgements for each assignment
+                    ds_for_assignment = assignment.dataset
+                    docs_for_dataset = Document.objects(dataset=ds_for_assignment)
 
-			assignment = Assignment.objects(name=assignment_name, instructor=user).first()
+                    incomplete_number = Assignment.objects(name=assignment_name,status=False).count()
+                    assignment['incomplete_number'] = incomplete_number
+                    assignment['id_'] = str(assignment['id'])
+                    assignment['ds_author'] = assignment.dataset.author.name
+                    assignment['ds_name'] = assignment.dataset.ds_name
+                    assignments.append(assignment)
 
-			# get judgements for each assignment
-			ds_for_assignment = assignment.dataset
-			docs_for_dataset = Document.objects(dataset=ds_for_assignment)
+                    queries = Query.objects(assignment=assignment)
+                    assignment['queries'] = queries
 
-			incomplete_number = Assignment.objects(name=assignment_name,status=False).count()
-			assignment['incomplete_number'] = incomplete_number
-			assignment['id_'] = str(assignment['id'])
-			assignment['ds_author'] = assignment.dataset.author.name
-			assignment['ds_name'] = assignment.dataset.ds_name
-			assignments.append(assignment)
-
-			queries = Query.objects(assignment=assignment)
-			assignment['queries'] = queries
-
-		return make_response(render_template(
-			"instructor.html", 
-			data={
-					"user" : json.dumps(user.to_json()),
-					"my_datasets" : my_datasets,
-					"public_datasets" : public_datasets,
-					"authorized_datasets" : authorized_datasets,
-					"classes" : classes,
-					"assignments" : assignments
-				}
-			), 200, headers)
-		
+            return make_response(render_template(
+                    "instructor.html", 
+                    data={
+                                    "user" : json.dumps(user.to_json()),
+                                    "my_datasets" : my_datasets,
+                                    "public_datasets" : public_datasets,
+                                    "authorized_datasets" : authorized_datasets,
+                                    "classes" : classes,
+                                    "assignments" : assignments
+                            }
+                    ), 200, headers)
+            

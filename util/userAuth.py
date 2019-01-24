@@ -8,45 +8,20 @@ from schema.User import User
 def login_auth_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        headers = {'Content-Type': 'text/html'}
-        try:
-            token = session['token']
-        except:
-            print("Cannot find token")
-            return redirect("/index")
+        if 'gitlab_token' not in session:
+            return redirect('/')
 
-        if token is None:
-            print("Token is null")
-            return redirect("/index")
-
-        s = Serializer(current_app.config.get('SECRET_KEY'))
-        try:
-            user_id = s.loads(token)
-        except SignatureExpired:
-            return redirect("/index")    # valid token, but expired
-        except BadSignature:
-            return redirect("/index")    # invalid token
-
-        user = User.objects(id=user_id).first()
-
-        if redis_store.get(user_id) == token:
-            return f(*args, **kwargs)
-        else:
-            return redirect("/index")
+        return f(*args, **kwargs)
+        
     return decorated_function
 
 
 def instructor_auth_required(f):
+    """Implement additional auth to verify instructor"""
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        headers = {'Content-Type': 'text/html'}
-        s = Serializer(current_app.config.get('SECRET_KEY'))
-        token = session['token']
-        user_id = s.loads(token)
-        user = User.objects(id=user_id).first()
-
-        if user.group != "instructor":
-            return make_response(render_template("index.html"),200,headers)
+        if 'gitlab_token' not in session:
+            return redirect('/')
 
         return f(*args, **kwargs)
 
@@ -56,14 +31,8 @@ def instructor_auth_required(f):
 def annotator_auth_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        headers = {'Content-Type': 'text/html'}
-        s = Serializer(current_app.config.get('SECRET_KEY'))
-        token = session['token']
-        user_id = s.loads(token)
-        user = User.objects(id=user_id).first()
-
-        if user.group != "annotator":
-            return make_response(render_template("index.html"),200,headers)
+        if 'gitlab_token' not in session:
+            return redirect('/')
 
         return f(*args, **kwargs)
 

@@ -11,7 +11,6 @@ from schema.Assignment import Assignment
 parser = reqparse.RequestParser()
 
 
-
 class AnnotatorAPI(Resource):
     @login_auth_required
     @annotator_auth_required
@@ -41,6 +40,4 @@ class AnnotatorAPI(Resource):
 
     def post(self):
         headers = {'Content-Type': 'application/json'}
-        
-
         return make_response(render_template("annotator.html"), 200, headers)
