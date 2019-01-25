@@ -1,8 +1,5 @@
 from flask import make_response, render_template, current_app, jsonify
 from flask_restful import Resource, reqparse
-
-from schema.DataSet import DataSet
-
 from search.searcher import Searcher
 
 parser = reqparse.RequestParser()
@@ -24,10 +21,6 @@ class SearchAPI(Resource):
 		ranker = args['ranker']
 		num_results = args['num_results']
 		params = args['params']
-
-		
-		# To do: check for invalid access here
-		# ds = DataSet.objects(author=author, ds_name=ds_name)
 
 		path = current_app.root_path + "/data/" + author
 		searcher = Searcher(author, ds_name, path)

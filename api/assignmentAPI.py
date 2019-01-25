@@ -1,6 +1,6 @@
 from flask import make_response, render_template, session, jsonify
 from flask_restful import Resource, reqparse
-from schema.DataSet import DataSet
+from schema.Dataset import Dataset
 
 from schema.User import User
 from schema.Query import Query
@@ -37,7 +37,7 @@ class AssignAPI(Resource):
         assignment.instructor = User.objects(id=instructor_id).first()
         assignment.ranker = ranker
         assignment.params = params
-        assignment.dataset = DataSet.objects(id=dataset).first()
+        assignment.dataset = Dataset.objects(id=dataset).first()
         assignment.annotators = User.objects()
         assignment.statuses = {str(anno.id): False for anno in assignment.annotators}
         assignment.deadline = deadline
@@ -114,7 +114,7 @@ class AddQueryAPI(Resource):
         content = args['content']
         dataset = args['dataset']
         creator = args['creator']
-        dataset = DataSet.objects(id=dataset)
+        dataset = Dataset.objects(id=dataset)
         creator = User.objects(id=creator)
         query = Query()
         query.content = content

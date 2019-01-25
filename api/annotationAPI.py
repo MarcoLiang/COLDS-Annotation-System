@@ -4,7 +4,6 @@ from flask_restful import Resource, reqparse
 from schema.Assignment import Assignment
 from schema.Annotation import Annotation
 from schema.User import User
-from schema.DataSet import DataSet
 from schema.Query import Query
 from schema.Document import Document
 
@@ -39,9 +38,6 @@ class AnnotationAPI(Resource):
 
                 dataset = assignment.dataset
 
-                # print dataset.id
-                # print file_name
-
                 document = Document.objects(dataset=dataset) \
                             .filter(name=file_name).first()
 
@@ -51,8 +47,5 @@ class AnnotationAPI(Resource):
                 a.judgement = label
                 a.query = query
                 a.save()
-
-        #mark the assignment complete
-
 
         return make_response(jsonify("succeed"), 200, headers)

@@ -3,7 +3,7 @@ from flask_restful import Resource, reqparse
 from flask_paginate import Pagination, get_page_parameter
 
 from schema.User import User
-from schema.DataSet import DataSet
+from schema.Dataset import Dataset
 from schema.Assignment import Assignment
 from schema.Annotation import Annotation
 from schema.Document import Document
@@ -24,9 +24,9 @@ class InstructorAPI(Resource):
             user = User.objects(id=user_id).first()
 
             # get all ds
-            my_datasets = DataSet.objects(author=user)
-            public_datasets = DataSet.objects(privacy='public', author__ne=user)
-            authorized_datasets = DataSet.objects(privacy='private',collaborators__in=[user])
+            my_datasets = Dataset.objects(author=user)
+            public_datasets = Dataset.objects(privacy='public', author__ne=user)
+            authorized_datasets = Dataset.objects(privacy='private',collaborators__in=[user])
 
             # get all assignments
             assignments = []

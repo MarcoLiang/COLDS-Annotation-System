@@ -2,8 +2,6 @@ from flask import make_response, render_template, current_app, jsonify, session
 from flask_restful import Resource, reqparse
 from util.userAuth import login_auth_required, annotator_auth_required
 
-from schema.DataSet import DataSet
-
 from schema.User import User
 from schema.Query import Query
 from schema.Assignment import Assignment

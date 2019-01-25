@@ -2,7 +2,7 @@ from flask import make_response, render_template, current_app, jsonify
 from flask_restful import Resource, reqparse
 
 from schema.User import User
-from schema.DataSet import DataSet
+from schema.Dataset import Dataset
 from schema.Assignment import Assignment
 from schema.Document import Document
 from schema.Annotation import Annotation
@@ -62,7 +62,7 @@ class DocumentAPI(Resource):
         assignment = args['assignment']
         document_name = args['document_name']
 
-        dataset = DataSet.objects(id=assignment['dataset']['$oid']).first()
+        dataset = Dataset.objects(id=assignment['dataset']['$oid']).first()
 
         ds_name = dataset.ds_name
         author_name = dataset.author.name

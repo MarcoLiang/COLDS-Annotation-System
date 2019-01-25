@@ -5,7 +5,7 @@ from util.utils import allowed_file
 from util.exception import InvalidUsage
 
 from schema import db
-from schema.DataSet import DataSet
+from schema.Dataset import Dataset
 from schema.User import User
 from schema.Document import Document
 
@@ -68,7 +68,7 @@ class UploadAPI(Resource):
 					"message":"File(s) format is(are) not correct"
 				}))
 
-		ds = DataSet()
+		ds = Dataset()
 		ds.ds_name = ds_name
 		ds.author = User.objects(name=author_name).first()
 		ds.privacy = ds_privacy 
