@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 from flask_restful import Api
-from flask_cors import CORS
-from schema import db, redis_store
+from schema import db
+from schema.User import User
 from api.indexAPI import IndexAPI
 from api.searchAPI import SearchAPI
 from api.annotationAPI import AnnotationAPI
@@ -14,7 +14,6 @@ from api.datasetAPI import DatasetUpdateAPI
 from api.instructorAPI import InstructorAPI
 from api.annotatorAPI import AnnotatorAPI
 from api.queryAPI import QueryAPI
-from api.classAPI import ClassAPI
 from api.alertAPI import AlertAPI
 
 from util.exception import InvalidUsage
@@ -24,9 +23,9 @@ from authlib.flask.client import OAuth
 import requests
 
 app = Flask(__name__, static_folder='static/', static_url_path='')
-app.config.from_object('config')
+app.config["SECRET_KEY"] = "development"
+
 api = Api(app)
-#CORS(app, resources={r"/login/*": {"origins": "lab.textdata.org"}})
 
 db.init_app(app)
 
@@ -58,7 +57,6 @@ api.add_resource(DocumentAPI, '/document')
 
 api.add_resource(InstructorAPI, '/instructor')
 api.add_resource(AnnotatorAPI, '/annotator')
-api.add_resource(ClassAPI, '/class')
 
 api.add_resource(DatasetAPI, '/dataset/<string:author>/<string:ds_name>')
 api.add_resource(DatasetUpdateAPI, '/dataset_update')
@@ -70,9 +68,11 @@ api.add_resource(AlertAPI, '/alert/<string:url>/<string:message>')
 def login():
     return gitlab.authorize_redirect(url_for('authorized', _external=True, _scheme='http'))
 
+
 @app.route('/logout')
 def logout():
     del session['gitlab_token']
+    del session['user_id']
     return redirect('/')
 
 
@@ -85,18 +85,23 @@ def authorized():
         'https://lab.textdata.org/api/v4/user?access_token=' + token['access_token'] 
     )
 
-    if 'id' in resp.json():
-        session['user'] = resp.json()
+    resp = resp.json()
+    if 'id' in resp:
+        user = User.objects(gitlab_id=resp['id']).first()
+        if not user:
+            user = User(
+                    gitlab_id=resp['id'],
+                    name=resp['name'],
+                    email=resp['email']
+                )
+            user.save()
+
+        session['user_id'] = str(user.id)
+
         return redirect('/instructor')
     else:
         return redirect('/logout')
 
-
-'''
-@gitlab.tokengetter
-def get_gitlab_oauth_token():
-    return session.get('gitlab_token')
-'''
 
 @app.errorhandler(InvalidUsage)
 def handle_invalid_usage(error):
@@ -106,4 +111,4 @@ def handle_invalid_usage(error):
 
 
 if __name__ == '__main__':
-	app.run()
+	app.run(debug=True)

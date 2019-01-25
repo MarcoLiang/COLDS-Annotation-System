@@ -17,11 +17,9 @@ class AnnotatorAPI(Resource):
     def get(self):
         headers = {'Content-Type': 'text/html'}
 
-        # get user
         user_id = session['user_id'];
         user = User.objects(id=user_id).first()
 
-        # get all assignments
         assignments = Assignment.objects(annotators__in=[user])
 
         for assignment in assignments:

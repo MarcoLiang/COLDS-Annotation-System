@@ -68,7 +68,6 @@ $(document).ready(function(){
 			}
 		});
 
-		var class_ = $("#assignment-class").val();
 		var ds_id = $('input[name="data_set"]:checked').val();
 		var ranker = $("#assignment-ranker").val();
 		var deadline = $("#assignment-deadline").val();
@@ -86,7 +85,6 @@ $(document).ready(function(){
 		// create assignment
 		var assign_data = {
 			"name" : name,
-			"class" : class_,
 			"dataset" : ds_id,
 			"ranker" : ranker,
 			"params" : params,

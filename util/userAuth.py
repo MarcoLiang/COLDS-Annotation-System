@@ -1,5 +1,4 @@
 from flask import abort, current_app, request, session, redirect, render_template, make_response
-from schema import redis_store
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
 from functools import wraps

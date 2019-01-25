@@ -1,3 +1,0 @@
-[None] 1.txt
-[None] 2.txt
-[None] 3.txt

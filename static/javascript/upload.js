@@ -61,7 +61,7 @@ $("#submit-btn").click(function(){
         		alert(data.message);
         	}
         	else{
-        		alert("")
+        		alert("Dataset successfully uploaded.")
         	}
         }
     });

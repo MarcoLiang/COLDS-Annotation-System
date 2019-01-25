@@ -17,18 +17,14 @@
 			<div class="col-md-2 sidebar">
 				<ul class="sidebar-list">
 					<li id="sidebar-title">
-						<img src="{{url_for('static', filename='image/icon_annotator.png')}}">
 						<p>{{data.user.name}}</p>
 					</li>
-					<li class="main-bullet clickable-text">Schedual</li>
 					<li id="assignments" class="main-bullet collapse-able clickable-text">Assignments</li>
 						<ul id="assignments-children" class="sub-bullets-container">
 							{% for assignment in data.assignments %}
 							<li id="{{assignment.name}}" class="sub-bullet clickable-text">{{assignment.name}}</li>
 							{% endfor %}
 						</ul>
-					
-					<li class="main-bullet clickable-text">Scores</li>
 				</ul>
 			</div>
 			<div class="col-md-10" id="content">

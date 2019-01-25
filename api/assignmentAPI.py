@@ -4,14 +4,11 @@ from schema.DataSet import DataSet
 
 from schema.User import User
 from schema.Query import Query
-from schema.Class import Class
 from schema.Assignment import Assignment
-
 
 parser = reqparse.RequestParser()
 parser.add_argument('name', type=str)
 parser.add_argument('instructor_id', type=str)
-parser.add_argument('class', type=str)
 parser.add_argument('dataset', type=str)
 parser.add_argument('query', type=str)
 parser.add_argument('ranker', type=str)
@@ -24,7 +21,6 @@ parser.add_argument('doc_scores', type=dict)
 
 
 class AssignAPI(Resource):
-    # instructor post new assignment
     def post(self):
         headers = {'Content-Type': 'application/json'}
         args = parser.parse_args()
@@ -34,38 +30,20 @@ class AssignAPI(Resource):
         dataset = args['dataset']
         deadline = args['deadline']
         doc_scores = args['doc_scores']
-        # class_ = args['class']
         instructor_id = session['user_id']
  
-        instructor = User.objects(id=instructor_id).first()
-        # class_ = Class.objects(id=class_)
-        dataset = DataSet.objects(id=dataset).first()
-
-        # add assignment to each student in class
-
-        # send assignments to all annotators by default(test)
-        annotators = User.objects(group='annotator')
-
-        statuses = dict()
-        for annotator in annotators:
-            statuses[str(annotator.id)] = False
-
         assignment = Assignment()
         assignment.name = name
-        assignment.instructor = instructor
+        assignment.instructor = User.objects(id=instructor_id).first()
         assignment.ranker = ranker
         assignment.params = params
-        assignment.dataset = dataset
-        assignment.annotators = annotators
-        assignment.statuses = statuses
+        assignment.dataset = DataSet.objects(id=dataset).first()
+        assignment.annotators = User.objects()
+        assignment.statuses = {str(anno.id): False for anno in assignment.annotators}
         assignment.deadline = deadline
         assignment.save()
 
-        # print assignment.id
-
-            
         return str(assignment.id)
-
 
 
 class AssignmentAPI(Resource):
@@ -101,7 +79,6 @@ class AssignmentUpdateAPI(Resource):
         headers = {'Content-Type': 'application/json'}
         args = parser.parse_args()
         assignment_id = args['assignment_id']
-        # print assignment_id
 
         assignment = Assignment.objects(id=assignment_id).first()
 
@@ -128,10 +105,6 @@ class AssignmentUpdateAPI(Resource):
             assignment.save()
 
         return jsonify(assignment)
-
-
-
-    # def post(self):
 
 
 class AddQueryAPI(Resource):

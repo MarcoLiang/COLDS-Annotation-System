@@ -1,9 +1,8 @@
-from flask import make_response, render_template, current_app, redirect, jsonify, abort, session, g
+from flask import make_response, render_template, current_app, redirect, jsonify, abort, session
 from flask_restful import Resource, reqparse
 from mongoengine.errors import NotUniqueError, ValidationError
 from util.userAuth import login_auth_required
 from schema.User import User
-from schema import redis_store
 from util.exception import InvalidUsage
 import json
 import os
