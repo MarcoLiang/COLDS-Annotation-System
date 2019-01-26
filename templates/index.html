@@ -8,9 +8,18 @@
 
 	<h2>Dataset Annotation System</h2>
 	<br>
-    <form action="/login" method="post">
-	    <button class="btn btn-primary" style="margin-top: 30px;">Login with GitLab</button> 
-    </form>
+    {% if logged_in %}
+        <form action="/instructor" method="get">
+            <button class="btn btn-primary" style="margin-top: 30px;">Manage Datasets</button>
+        </form>
+        <form action="/annotator" method="get">
+            <button class="btn btn-primary" style="margin-top: 30px;">Annotate Datasets</button>
+        </form>
+    {% else %}
+        <form action="/login" method="post">
+	        <button class="btn btn-primary" style="margin-top: 30px;">Login with GitLab</button> 
+        </form>
+    {% endif %}
 
 </div>
 {% endblock %}

@@ -10,7 +10,10 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/login">Dataset Annotation System</a>
+        <a class="navbar-text" href="/">Home</a>
+        {% if logged_in %}
+            <a class="navbar-text" href="/logout">Logout</a>
+        {% endif %}
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->

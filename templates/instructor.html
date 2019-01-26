@@ -41,6 +41,8 @@
 
 
 	<button id="nav-upload-btn" class="btn-lg btn-primary">Upload Dataset</button>
+    <button class="btn-lg btn-primary" data-toggle="modal" data-target="#create-class-modal">Create Class</button>
+
 
 	<ul class="nav nav-tabs" style="margin-top:50px;">
 		<li class="active"><a data-toggle="tab" href="#tab-datasets">Datasets</a></li>
@@ -156,17 +158,10 @@
 				  <h3 class="modal-title">Create Class</h3>
 				</div>
 				<div class="modal-body">
-
 				  <div class="row">
 				    <label class="col-sm-2 control-label col-sm-offset-1">ClassName</label>
 				    <div class="col-sm-8">
 				      <input id="class-name" class="form-control" type="text">
-				    </div>
-				  </div>
-				  <div class="row">
-				    <label class="col-sm-2 control-label col-sm-offset-1">Password</label>
-				    <div class="col-sm-8">
-				      <input id="class-password" class="form-control" type="password" placeholder="Optional...">
 				    </div>
 				  </div>
 				</div>
@@ -203,6 +198,17 @@
 					</div>
 
 				    <div class="col-sm-8 col-sm-offset-3 col-md-8 col-md-offset-3"><a id="add-query-btn">Add Query</a></div>
+				  </div>
+
+                  <div class="row">
+				    <label class="col-sm-2 control-label col-sm-offset-1">Class</label>
+				    <div class="col-sm-8">
+				      <select id="assignment-class">
+				      	{% for class_ in data.classes %}
+						<option>{{class_}}</option>
+						{% endfor %}
+				      </select>
+				    </div>
 				  </div>
 				  
                   <!-- ranker -->
@@ -268,7 +274,7 @@
 		</div>
 	</div><!-- end of assign modal -->
 
-	<!-- assign successful model -->
+	<!-- assign successful modal -->
 	<div class="modal fade" id="assign-notification-modal" role="dialog">
 	    <div class="modal-dialog">
 			<div class="modal-content">
@@ -311,7 +317,18 @@
 				      <input id="update-query" class="form-control" type="text">
 				    </div>
 				  </div>
-					
+				
+                <div class="row">
+				    <label class="col-sm-2 control-label col-sm-offset-1">Class</label>
+				    <div class="col-sm-8">
+				      <select id="update-class">
+				      	{% for class_ in data.classes %}
+						<option>{{class_}}</option>
+						{% endfor %}
+				      </select>
+				    </div>
+				  </div>
+
 				  <!-- ranker -->
 				  <div class="row">
 				    <label class="col-sm-2 control-label col-sm-offset-1">Ranker</label>

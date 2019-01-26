@@ -6,5 +6,8 @@ from util.userAuth import login_auth_required
 
 class IndexAPI(Resource):
     def get(self):
-        headers = {'Content-Type': 'text/html'}
-        return make_response(render_template("index.html"), 200, headers)
+        return make_response(
+                render_template("index.html", logged_in=('user_id' in session)),
+                200,
+                {'Content-Type': 'text/html'}
+        )

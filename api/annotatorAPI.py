@@ -1,6 +1,6 @@
 from flask import make_response, render_template, current_app, jsonify, session
 from flask_restful import Resource, reqparse
-from util.userAuth import login_auth_required, annotator_auth_required
+from util.userAuth import login_auth_required
 
 from schema.User import User
 from schema.Query import Query
@@ -11,7 +11,6 @@ parser = reqparse.RequestParser()
 
 class AnnotatorAPI(Resource):
     @login_auth_required
-    @annotator_auth_required
     def get(self):
         headers = {'Content-Type': 'text/html'}
 
@@ -30,8 +29,12 @@ class AnnotatorAPI(Resource):
                 data={
                     "assignments" : assignments,
                     "user" : user
-                }), 
-            200, headers)
+                }, 
+                logged_in=('user_id' in session)
+            ),
+            200, 
+            headers
+        )
 
 
     def post(self):

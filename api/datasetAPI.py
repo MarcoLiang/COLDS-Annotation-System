@@ -1,6 +1,5 @@
 from flask import make_response, render_template, current_app, jsonify, session
 from flask_restful import Resource, reqparse
-from util.userAuth import annotator_auth_required
 
 from schema.Dataset import Dataset
 
@@ -30,8 +29,12 @@ class DatasetAPI(Resource):
                 data={
                     "assignments" : assignments,
                     "user" : user
-                }), 
-            200, headers)
+                },
+                logged_in=('user_id' in session)
+            ), 
+            200, 
+            headers
+        )
 
 
 parser.add_argument('ds_id', type=str)
@@ -77,12 +80,3 @@ class DatasetUpdateAPI(Resource):
         ds.save()
 
         return make_response(jsonify({'message':"OK"}), 200, headers)
-
-
-
-
-
-
-
-
-        

@@ -15,6 +15,7 @@ from api.instructorAPI import InstructorAPI
 from api.annotatorAPI import AnnotatorAPI
 from api.queryAPI import QueryAPI
 from api.alertAPI import AlertAPI
+from api.classAPI import ClassAPI
 
 from util.exception import InvalidUsage
 
@@ -57,6 +58,7 @@ api.add_resource(DocumentAPI, '/document')
 
 api.add_resource(InstructorAPI, '/instructor')
 api.add_resource(AnnotatorAPI, '/annotator')
+api.add_resource(ClassAPI, '/class')
 
 api.add_resource(DatasetAPI, '/dataset/<string:author>/<string:ds_name>')
 api.add_resource(DatasetUpdateAPI, '/dataset_update')

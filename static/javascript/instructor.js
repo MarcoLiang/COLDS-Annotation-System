@@ -26,12 +26,9 @@ $(document).ready(function(){
 	// new class
 	$("#create-class-btn").click(function(){
 		var class_name = $("#class-name").val();
-		var password = $("#class-password").val();
 
 		var data = {
-			"instructor" : user.name,
 			"name" : class_name,
-			"password" : password
 		};
 
 		$.ajax({

@@ -13,26 +13,3 @@ def login_auth_required(f):
         return f(*args, **kwargs)
         
     return decorated_function
-
-
-def instructor_auth_required(f):
-    """Implement additional auth to verify instructor"""
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'gitlab_token' not in session:
-            return redirect('/')
-
-        return f(*args, **kwargs)
-
-    return decorated_function
-
-
-def annotator_auth_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'gitlab_token' not in session:
-            return redirect('/')
-
-        return f(*args, **kwargs)
-
-    return decorated_function
