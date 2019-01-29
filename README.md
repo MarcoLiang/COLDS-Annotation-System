@@ -3,15 +3,15 @@ The dataset annotation engine is an application originally created by a handful 
 
 The repository for the application can be found here: https://github.com/TIMAN-group/COLDS-Annotation-System.
 
-#Architecture
+### Architecture
 
 The dataset annotation engine is a single Flask application that uses html templates and JQuery for the frontend and a MongoDB database. This was the stack that the application was originally developed in, and for now, we'll make do with what we've got.
 
-#Authentication
+### Authentication
 
 The application uses GitLab's OAuth2 service to perform user authentication. Thus, all users must have accounts on the core GitLab virtual lab. Maybe we'll add Google OAuth2 at some point if we have users outside a classroom network.
 
-#Running Locally
+### Running Locally
 
 First create a python virtual environment: virtualenv venv.
 
@@ -23,7 +23,7 @@ Start a MongoDB instance locally with whatever data directory you want to use. T
 
 Run server: `python server.py`.
 
-#Tests
+### Tests
 
 Yeah, there's no testing on this application either. Feel free to add these and make a PR. Bad development practice, I know.
 
