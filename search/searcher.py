@@ -14,7 +14,7 @@ class Searcher:
 	Wraps the MeTA search engine and its rankers.
 	"""
 
-	def __init__(self, author, ds_name, path):
+	def __init__(self, ds_name, path):
 		"""
 		Create/load a MeTA inverted index based on the provided config file and
 		set the default ranking algorithm to Okapi BM25.
@@ -23,7 +23,7 @@ class Searcher:
 		:param path: path to dataset (data/author), append ds_name to get full path
 		"""
 		self.default_ranker_cls = metapy.index.OkapiBM25
-		cfg = self.generate_config(author, ds_name, path)
+		cfg = self.generate_config(ds_name, path)
 		cwd = os.getcwd()
 		os.chdir(path)
 		self.idx = metapy.index.make_inverted_index(cfg)
@@ -67,7 +67,7 @@ class Searcher:
 
 
 	@staticmethod
-	def generate_config(author, ds_name, path):
+	def generate_config(ds_name, path):
 		"""
 		Construct config.toml for the dataset &
 		Assume line.toml is constructed after uploading

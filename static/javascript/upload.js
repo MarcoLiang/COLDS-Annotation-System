@@ -57,12 +57,7 @@ $("#submit-btn").click(function(){
         processData: false,
 
         success: function(data){
-        	if(data.status == "Failed"){
-        		alert(data.message);
-        	}
-        	else{
-        		alert("Dataset successfully uploaded.")
-        	}
+        	alert(data.message)
         }
     });
 });

@@ -9,8 +9,7 @@ from api.uploadAPI import UploadAPI
 from api.assignmentAPI import AssignAPI, AssignmentAPI, AssignmentUpdateAPI
 from api.documentAPI import DocumentAPI
 from api.documentAPI import DocumentsAPI
-from api.datasetAPI import DatasetAPI
-from api.datasetAPI import DatasetUpdateAPI
+from api.datasetupdateAPI import DatasetUpdateAPI
 from api.instructorAPI import InstructorAPI
 from api.annotatorAPI import AnnotatorAPI
 from api.queryAPI import QueryAPI
@@ -24,7 +23,7 @@ from authlib.flask.client import OAuth
 import requests
 
 app = Flask(__name__, static_folder='static/', static_url_path='')
-app.config["SECRET_KEY"] = "development"
+app.config["SECRET_KEY"] = "secret"
 
 api = Api(app)
 
@@ -43,7 +42,7 @@ gitlab = oauth.register('gitlab',
     )
 
 api.add_resource(IndexAPI, '/')
-api.add_resource(SearchAPI, '/search/<string:author>/<string:ds_name>')
+api.add_resource(SearchAPI, '/search/<string:owner_id>/<string:ds_name>')
 api.add_resource(AnnotationAPI, '/annotation')
 api.add_resource(UploadAPI, '/upload')
 
@@ -60,7 +59,6 @@ api.add_resource(InstructorAPI, '/instructor')
 api.add_resource(AnnotatorAPI, '/annotator')
 api.add_resource(ClassAPI, '/class')
 
-api.add_resource(DatasetAPI, '/dataset/<string:author>/<string:ds_name>')
 api.add_resource(DatasetUpdateAPI, '/dataset_update')
 
 api.add_resource(AlertAPI, '/alert/<string:url>/<string:message>')

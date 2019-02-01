@@ -8,7 +8,6 @@ from schema.Assignment import Assignment
 
 parser = reqparse.RequestParser()
 parser.add_argument('name', type=str)
-parser.add_argument('instructor_id', type=str)
 parser.add_argument('dataset', type=str)
 parser.add_argument('query', type=str)
 parser.add_argument('ranker', type=str)
@@ -30,11 +29,10 @@ class AssignAPI(Resource):
         dataset = args['dataset']
         deadline = args['deadline']
         doc_scores = args['doc_scores']
-        instructor_id = session['user_id']
  
         assignment = Assignment()
         assignment.name = name
-        assignment.instructor = User.objects(id=instructor_id).first()
+        assignment.owner = User.objects(id=session['user_id']).first()
         assignment.ranker = ranker
         assignment.params = params
         assignment.dataset = Dataset.objects(id=dataset).first()
@@ -55,7 +53,7 @@ class AssignmentAPI(Resource):
         user = User.objects(id=user_id).first()
 
         assignment = Assignment.objects(name=assignment_name)  \
-            .filter(instructor=instructor).first()
+            .filter(owner=instructor).first()
 
         assignment.instructor_name = assignment.instructor.name
         assignment.ds_name = assignment.dataset.ds_name
@@ -76,12 +74,12 @@ parser.add_argument('assignment_id', type=str)
 
 class AssignmentUpdateAPI(Resource):
     def post(self):
-        headers = {'Content-Type': 'application/json'}
         args = parser.parse_args()
         assignment_id = args['assignment_id']
 
         assignment = Assignment.objects(id=assignment_id).first()
 
+        import pdb; pdb.set_trace()
         name = args['name']
         query = args['query']
         ranker = args['ranker']
@@ -90,19 +88,16 @@ class AssignmentUpdateAPI(Resource):
         deadline = args['deadline']
         doc_scores = args['doc_scores']
 
-        assignments = Assignment.objects(instructor=assignment.instructor, name=assignment.name)
+        assignment.name = name
+        assignment.query = query
+        assignment.ranker = ranker
+        assignment.params = params
+        assignment.deadline = deadline
 
-        for assignment in assignments:
-            assignment.name = name
-            assignment.query = query
-            assignment.ranker = ranker
-            assignment.params = params
-            assignment.deadline = deadline
-
-            if len(doc_scores) != 0:
-                assignment.doc_scores = doc_scores
+        if len(doc_scores) != 0:
+            assignment.doc_scores = doc_scores
  
-            assignment.save()
+        assignment.save()
 
         return jsonify(assignment)
 

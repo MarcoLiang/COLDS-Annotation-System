@@ -64,9 +64,9 @@
 		  <h4 style="margin-bottom: 20px;">My Datasets</h4>
 			  {% for dataset in data.my_datasets %}
 			  		<div class="ds-container">
-			  			<div class="ds-select-container" id="{{dataset.author.name}}">
+			  			<div class="ds-select-container" id="{{dataset.owner.name}}">
 							<input class="ds-checkbox" type="radio" name="data_set" value="{{dataset.id}}">
-							<p class="dataset-name">{{dataset.ds_name}} authored by {{dataset.author.name}} <a id="{{dataset.id}}" class="dataset-update-btn" style="font-size:12px;" data-toggle="modal" data-target="#dataset-edit-modal">edit</a></p>
+							<p class="dataset-name">{{dataset.name}} owned by {{dataset.owner.name}} <a id="{{dataset.id}}" class="dataset-update-btn" style="font-size:12px;" data-toggle="modal" data-target="#dataset-edit-modal">edit</a></p>
 						</div>
 					</div>
 			  {% endfor %}
@@ -76,9 +76,9 @@
 			  <h4 style="margin-bottom: 20px;">Public Datasets</h4>
 			  {% for dataset in data.public_datasets %}
 			  		<div class="ds-container">
-			  			<div class="ds-select-container" id="{{dataset.author.name}}">
+			  			<div class="ds-select-container" id="{{dataset.owner.name}}">
 							<input class="ds-checkbox" type="radio" name="data_set" value="{{dataset.id}}">
-							<p class="dataset-name">{{dataset.ds_name}} authored by {{dataset.author.name}}</p>
+							<p class="dataset-name">{{dataset.name}} owned by {{dataset.owner.name}}</p>
 						</div>
 					</div>
 			  {% endfor %}
@@ -89,9 +89,9 @@
 			  <h4 style="margin-bottom: 20px;">Authorized Datasets</h4>
 			  {% for dataset in data.authorized_datasets %}
 			  		<div class="ds-container">
-			  			<div class="ds-select-container" id="{{dataset.author.name}}">
+			  			<div class="ds-select-container" id="{{dataset.owner.name}}">
 							<input class="ds-checkbox" type="radio" name="data_set" value="{{dataset.id}}">
-							<p class="dataset-name">{{dataset.ds_name}} authored by {{dataset.author.name}}</p>
+							<p class="dataset-name">{{dataset.name}} owned by {{dataset.owner.name}}</p>
 						</div>
 					</div>
 			  {% endfor %}

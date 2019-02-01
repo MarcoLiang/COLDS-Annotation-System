@@ -2,7 +2,7 @@ from schema import db
 
 class Assignment(db.DynamicDocument):
     name = db.StringField(required=True)
-    instructor = db.ReferenceField('User', required=True)
+    owner = db.ReferenceField('User', required=True)
     dataset = db.ReferenceField('Dataset')
     annotators = db.ListField(db.ReferenceField('User'),required=True)
     statuses = db.DictField(required=True)

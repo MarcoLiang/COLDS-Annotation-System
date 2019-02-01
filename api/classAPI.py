@@ -12,13 +12,12 @@ parser.add_argument('instructor', type=str)
 class ClassAPI(Resource):
     @login_auth_required
     def post(self):
-        headers = {'Content-Type': 'application/json'}
-        user = User.objects(id=session['user_id']).first()
-
         args = parser.parse_args()
 
         class_ = Class()
-        class_.owner_id = user.id
-        class_.owner_name = user.name
+        class_.owner = User.objects(id=session['user_id']).first()
         class_.name = args['name']
+        #class_.password = args['password']
         class_.save()
+
+        return make_response(jsonify({"message": "Success"}), 200)

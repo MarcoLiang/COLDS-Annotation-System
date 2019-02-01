@@ -7,8 +7,8 @@ from schema.User import User
 from schema.Query import Query
 from schema.Document import Document
 
-
 import json
+
 parser = reqparse.RequestParser()
 parser.add_argument('assignment_id', type=str)
 parser.add_argument('annotations', type=dict)

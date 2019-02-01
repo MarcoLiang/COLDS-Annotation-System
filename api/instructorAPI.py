@@ -15,64 +15,36 @@ from util.exception import InvalidUsage
 import os, json
 
 class InstructorAPI(Resource):
-	@login_auth_required
-	def get(self):
-            headers = {'Content-Type': 'text/html'}
-            
-            # get user
-            user_id = session['user_id']
-            user = User.objects(id=user_id).first()
+    @login_auth_required
+    def get(self):
+        user = User.objects(id=session['user_id']).first()
 
-            # get all ds
-            my_datasets = Dataset.objects(author=user)
-            public_datasets = Dataset.objects(privacy='public', author__ne=user)
-            authorized_datasets = Dataset.objects(privacy='private',collaborators__in=[user])
+        my_datasets = Dataset.objects(owner=user)
+        public_datasets = Dataset.objects(privacy='public', owner__ne=user)
+        authorized_datasets = Dataset.objects(privacy='private', collaborators__in=[user])
 
-            classes = [class_.name for class_ in Class.objects(owner_id=user_id)]
+        classes = [class_.name for class_ in Class.objects(owner=user)]
+        assignments = map(self._collect_assignment_data, Assignment.objects(owner=user))            
 
-            # get all assignments
-            assignments = []
+        return make_response(render_template(
+                "instructor.html", 
+                data={
+                    "user" : json.dumps(user.to_json()),
+                    "my_datasets" : my_datasets,
+                    "public_datasets" : public_datasets,
+                    "authorized_datasets" : authorized_datasets,
+                    "classes" : classes,
+                    "assignments" : assignments
+                },
+                logged_in=('user_id' in session)
+            ), 
+            200, 
+            {'Content-Type': 'text/html'}
+        )
 
-            assignment_names = Assignment.objects(instructor=user).aggregate({
-                '$group': { '_id': '$name'}
-            })
 
-            assignment_names = list(assignment_names)
-
-            # get all incomplete assignments
-            incomplete_numbers = []
-
-            for assignment_name in assignment_names:
-                    assignment_name = assignment_name['_id']
-
-                    assignment = Assignment.objects(name=assignment_name, instructor=user).first()
-
-                    # get judgements for each assignment
-                    ds_for_assignment = assignment.dataset
-                    docs_for_dataset = Document.objects(dataset=ds_for_assignment)
-
-                    incomplete_number = Assignment.objects(name=assignment_name,status=False).count()
-                    assignment['incomplete_number'] = incomplete_number
-                    assignment['id_'] = str(assignment['id'])
-                    assignment['ds_author'] = assignment.dataset.author.name
-                    assignment['ds_name'] = assignment.dataset.ds_name
-                    assignments.append(assignment)
-
-                    queries = Query.objects(assignment=assignment)
-                    assignment['queries'] = queries
-
-            return make_response(render_template(
-                    "instructor.html", 
-                    data={
-                        "user" : json.dumps(user.to_json()),
-                        "my_datasets" : my_datasets,
-                        "public_datasets" : public_datasets,
-                        "authorized_datasets" : authorized_datasets,
-                        "classes" : classes,
-                        "assignments" : assignments
-                    },
-                    logged_in=('user_id' in session)
-                ), 
-                200, 
-                headers
-            )
+    def _collect_assignment_data(self, assignment):
+        assignment.queries = Query.objects(assignment=assignment)
+        assignment.ds_name = assignment.dataset.name
+        assignment.owner_id = str(assignment.owner.id)
+        return assignment

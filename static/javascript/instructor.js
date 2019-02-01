@@ -267,8 +267,6 @@ $(document).ready(function(){
 			search_tag = true;
 		}
 
-
-
 		// if search condition changed
 		if(search_tag){
 			var search_data = {
@@ -277,10 +275,10 @@ $(document).ready(function(){
 				"num_results" : num_results,
 				"params" : params
 			};
-
+			console.log(curr_assignment)
 			$.ajax({
 				type : "POST",
-				url : "/search/" + curr_assignment.ds_author + "/" + curr_assignment.ds_name,
+				url : "/search/" + curr_assignment.owner_id + "/" + curr_assignment.ds_name,
 				data: JSON.stringify(search_data),
 				contentType: 'application/json; charset=utf-8'
 			})
