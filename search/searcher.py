@@ -18,16 +18,15 @@ class Searcher:
 		"""
 		Create/load a MeTA inverted index based on the provided config file and
 		set the default ranking algorithm to Okapi BM25.
-		:param author: author name of dataset
 		:param ds_name: dataset name
 		:param path: path to dataset (data/author), append ds_name to get full path
 		"""
 		self.default_ranker_cls = metapy.index.OkapiBM25
+                cwd = os.getcwd()
+		os.chdir(path + "/")
 		cfg = self.generate_config(ds_name, path)
-		cwd = os.getcwd()
-		os.chdir(path)
 		self.idx = metapy.index.make_inverted_index(cfg)
-		os.chdir(cwd)
+                os.chdir(cwd)
 
 	def search(self, query, ranker_name, params={}, num_results=5):
 		"""
@@ -73,7 +72,7 @@ class Searcher:
 		Assume line.toml is constructed after uploading
 		If already exists, return the config file
 		"""
-		cfg = path + "/" + ds_name + "-config.toml"
+		cfg = ds_name + "/" + ds_name + "-config.toml"
 		if os.path.isfile(cfg):
 			return cfg
 		obj = dict()

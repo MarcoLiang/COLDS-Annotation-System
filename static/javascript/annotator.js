@@ -17,13 +17,11 @@ $(document).ready(function(){
 
 	// show assignment detail
 	$("#assignments-children li").click(function(){
-		var name = $(this).html();
-		var assignment = assignments[name];
+		var id = $(this).context.id;
+		var assignment = assignments[id];
 
-		console.log(assignment);
-		
 		$("#assignment-name").html(assignment.name);
-		$("#assignment-author").html("Author: " + assignment.author);
+		$("#assignment-author").html("Owner: " + assignment.owner_name);
 		$("#assignment-query").html("Query: " + assignment.query);
 		$("#assignment-ranker").html("Ranker: " + assignment.ranker);
 		$("#assignment-deadline").html("Deadline: " + assignment.deadline);
@@ -34,12 +32,13 @@ $(document).ready(function(){
 		curr_assignment = assignment;
 
 		// remind user if this assignment have been finished already
-		if(curr_assignment.status == true){
-			$("#nav-assignment-btn").html("Start Over");
-		}
-		else{
-			$("#nav-assignment-btn").html("Start");
-		}
+		if(curr_assignment.complete) {
+			$("#nav-assignment-btn").css("display", "none");
+            $("#complete-text").css("display", "block");
+		} else {
+            $("#complete-text").css("display", "none");
+		    $("#nav-assignment-btn").css("display", "inline-block");
+        }
 	});
 
 	// go to assignment
@@ -49,15 +48,10 @@ $(document).ready(function(){
 			return;
 		}
 
-		window.location = "/assignment/" + curr_assignment.author + "/" + curr_assignment.name;
+		window.location = "/assignment/" + curr_assignment.owner_id + "/" + curr_assignment.name;
 	});
 
 	$("#nav-assignment-modal-btn").click(function(){
-		window.location = "/assignment/" + curr_assignment.author + "/" + curr_assignment.name;
-	});
-
-	// play btn clicked
-	$("#play-btn").click(function(){
-		window.location = "/search/" + curr_assignment.author + "/" + curr_assignment.ds_name;
+		window.location = "/assignment/" + curr_assignment.owner_id + "/" + curr_assignment.name;
 	});
 });

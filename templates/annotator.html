@@ -8,7 +8,7 @@
 
 	<script type="text/javascript">
 		{% for assignment in data.assignments %}
-			assignments["{{assignment.name}}"] = {{assignment|tojson}};
+			assignments["{{assignment.id}}"] = {{assignment|tojson}};
 		{% endfor %}
 	</script>
 
@@ -22,7 +22,7 @@
 					<li id="assignments" class="main-bullet collapse-able clickable-text">Assignments</li>
 						<ul id="assignments-children" class="sub-bullets-container">
 							{% for assignment in data.assignments %}
-							<li id="{{assignment.name}}" class="sub-bullet clickable-text">{{assignment.name}}</li>
+							<li id="{{assignment.id}}" class="sub-bullet clickable-text">{{assignment.name}}</li>
 							{% endfor %}
 						</ul>
 				</ul>
@@ -34,6 +34,7 @@
 
 				<div id="content-assignment" style="display: none;">
 					<div class="well assignment-info">
+                        <h4 id="complete-text" style="display: none; color: green;">Complete!</h4>
 						<h1 id="assignment-name">Assignment 10</h1>
 						<h4 id="assignment-author" style="margin-top: 30px;">Author: Chengxiang Zhai</h4>
 						<h4 id="assignment-query">Query: Sample Query</h4>
@@ -42,31 +43,9 @@
 					</div>
 
 					<button id="nav-assignment-btn" class="btn-lg btn-primary">Start</button>
-					<button id="play-btn" class="btn-lg btn-primary" style="margin-left: 10px;">Play</button>
 				</div>
 				
 			</div>
 		</div>
 	</div>
-
-
-	<!-- modals -->
-	<div class="modal fade" id="alert-modal" role="dialog" style="margin-top:100px;">
-	    <div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header" style="border-bottom: none;">
-				  <button type="button" class="close" data-dismiss="modal">&times;</button>
-				  <h3 class="modal-title">Warning</h3>
-				</div>
-				<div class="modal-body">
-				  <p>You have finished this assignment already, your past submission will be removed if you start over.</p>
-				</div>
-				<div class="modal-footer" style="border-top: none;">
-				  <button id="nav-assignment-modal-btn" type="button" class="btn btn-primary" data-dismiss="modal">Start</button>
-				  <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-				</div>
-			</div>
-		</div>
-	</div><!-- end of class modal -->
-
 {% endblock %}

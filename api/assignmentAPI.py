@@ -1,4 +1,4 @@
-from flask import make_response, render_template, session, jsonify
+from flask import make_response, render_template, session, jsonify, redirect
 from flask_restful import Resource, reqparse
 from schema.Dataset import Dataset
 
@@ -45,19 +45,22 @@ class AssignAPI(Resource):
 
 
 class AssignmentAPI(Resource):
-    def get(self, instructor_name, assignment_name):
+    def get(self, owner_id, assignment_name):
         headers = {'Content-Type': 'text/html'}
         args = parser.parse_args()
-        instructor = User.objects(name=instructor_name).first()
+        owner = User.objects(id=owner_id).first()
         user_id = session['user_id']
         user = User.objects(id=user_id).first()
 
         assignment = Assignment.objects(name=assignment_name)  \
-            .filter(owner=instructor).first()
+            .filter(owner=owner).first()
 
-        assignment.instructor_name = assignment.instructor.name
-        assignment.ds_name = assignment.dataset.ds_name
-        assignment.ds_author = assignment.dataset.author.name
+        if assignment.statuses[str(user_id)]:
+            return redirect("/annotator")
+
+        assignment.owner_name = assignment.owner.name
+        assignment.ds_name = assignment.dataset.name
+        assignment.ds_owner_id = str(assignment.dataset.owner.id)
 
         queries = Query.objects(assignment=assignment)
         return make_response(

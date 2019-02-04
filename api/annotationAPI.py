@@ -25,6 +25,9 @@ class AnnotationAPI(Resource):
         annotations = args['annotations']
         user_id = session['user_id']
 
+        if assignment.statuses[str(user_id)]:
+            return make_response(jsonify("Failed: Already submitted assignment"), 200)
+
         annotator = User.objects(id=user_id).first()
 
         for query_content in annotations:
@@ -47,5 +50,11 @@ class AnnotationAPI(Resource):
                 a.judgement = label
                 a.query = query
                 a.save()
+
+
+        # student has completed the assignment
+        cstatus = assignment.statuses
+        cstatus[str(user_id)] = True 
+        Assignment.objects(id=assignment_id).update(statuses=cstatus)
 
         return make_response(jsonify("succeed"), 200, headers)

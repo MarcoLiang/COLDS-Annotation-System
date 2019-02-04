@@ -15,7 +15,7 @@ $(document).ready(function(){
 		var assignment_id = assignment["_id"]["$oid"];
 		var user_id = user["_id"]["$oid"];
 		var ds_name = assignment['ds_name']
-		var ds_author = assignment['ds_author']
+		var ds_owner_id = assignment['ds_owner_id']
 
 		var search_data = {
 			"query" : query_content,
@@ -26,7 +26,7 @@ $(document).ready(function(){
 
 		$.ajax({
 			type : "POST",
-			url : "/search/" + ds_author + "/" + ds_name,
+			url : "/search/" + ds_owner_id + "/" + ds_name,
 			data: JSON.stringify(search_data),
 			contentType: 'application/json; charset=utf-8'
 		})
@@ -96,9 +96,9 @@ $(document).ready(function(){
 
 			for(var i = 0; i < labels.length; i++){
 				var label = labels[i];
-				// console.log(typeof(label));
 				var id = $(label).attr("id");
-				var input_name = "input[name=" + id + "-label-name]:checked";
+                var proc_id = id.split(" ").join("\\ ");
+				var input_name = "input[name=" + proc_id + "-label-name]:checked";
 				if(!$(input_name).val()){
 					alert("Please finish assignment");
 					return true;
@@ -129,14 +129,6 @@ $(document).ready(function(){
 	});
 });
 
-
-
-function updateAssignmentView(){
-
-}
-
-
-
 function get_document_detail(target){
 	var doc_name = $(target).html();
 
@@ -154,7 +146,6 @@ function get_document_detail(target){
 		contentType: 'application/json; charset=utf-8'
 	})
 	.success(function(data){
-		console.log(data);
 		$(".modal-title").html(doc_name);
 		$(".modal-body").html(data);
 	});

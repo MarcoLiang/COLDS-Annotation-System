@@ -20,8 +20,10 @@ class AnnotatorAPI(Resource):
         assignments = Assignment.objects(annotators__in=[user])
 
         for assignment in assignments:
-            assignment['author'] = assignment.instructor.name
-            assignment['ds_name'] = assignment.dataset.ds_name
+            assignment['owner_name'] = assignment.owner.name
+            assignment['owner_id'] = str(assignment.owner.id)
+            assignment['ds_name'] = assignment.dataset.name
+            assignment['complete'] = assignment.statuses.get(str(user_id), False)
 
         return make_response(
             render_template(

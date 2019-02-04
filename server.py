@@ -47,7 +47,7 @@ api.add_resource(AnnotationAPI, '/annotation')
 api.add_resource(UploadAPI, '/upload')
 
 api.add_resource(AssignAPI, '/assign')
-api.add_resource(AssignmentAPI, '/assignment/<string:instructor_name>/<string:assignment_name>')
+api.add_resource(AssignmentAPI, '/assignment/<string:owner_id>/<string:assignment_name>')
 api.add_resource(AssignmentUpdateAPI, '/assignment_update')
 
 api.add_resource(QueryAPI, '/query')
