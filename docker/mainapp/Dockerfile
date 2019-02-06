@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:2.7
 RUN mkdir -p /srv/mainapp
 WORKDIR /srv/mainapp
 COPY requirements.txt ./
