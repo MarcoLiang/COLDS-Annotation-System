@@ -20,7 +20,7 @@ from util.exception import InvalidUsage
 
 from flask import render_template, url_for, session, redirect
 from authlib.flask.client import OAuth
-import requests
+import requests, os
 
 app = Flask(__name__, static_folder='static/', static_url_path='')
 app.config["SECRET_KEY"] = "secret"
@@ -111,4 +111,5 @@ def handle_invalid_usage(error):
 
 
 if __name__ == '__main__':
-	app.run(debug=True)
+    os.environ['ENV'] = 'dev'
+    app.run(debug=True)
