@@ -10,9 +10,6 @@ from schema.Assignment import Assignment
 import os, json
 
 parser = reqparse.RequestParser()
-env = os.environ["ENV"]
-cfg = json.loads(open('config.json').read())[env]
-
 parser.add_argument('ds_id', type=str)
 parser.add_argument('ds_name', type=str)
 parser.add_argument('ds_privacy', type=str)
@@ -31,8 +28,8 @@ class DatasetUpdateAPI(Resource):
         user = User.objects(id=session['user_id']).first()
 
         if len(ds_name) > 0:
-            old_ds_path = cfg["dataset_base_path"] + str(user.gitlab_id) + "/" + ds.name
-            new_ds_path = cfg["dataset_base_path"] + str(user.gitlab_id) + "/" + ds_name
+            old_ds_path = '/data/annotatable_datasets/' + str(user.gitlab_id) + "/" + ds.name
+            new_ds_path = '/data/annotatable_datasets/' + str(user.gitlab_id) + "/" + ds_name
             os.rename(old_ds_path, new_ds_path)
             ds.name = ds_name
 
