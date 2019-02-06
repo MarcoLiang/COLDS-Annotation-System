@@ -98,3 +98,4 @@ data/
 
 config.json
 cloud-init.txt
+azure/azure-env.sh
