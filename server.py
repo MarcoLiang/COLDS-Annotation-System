@@ -111,5 +111,4 @@ def handle_invalid_usage(error):
 
 
 if __name__ == '__main__':
-    os.environ['ENV'] = 'dev'
     app.run(debug=True)

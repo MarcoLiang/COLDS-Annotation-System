@@ -8,7 +8,7 @@ docker-machine create \
     --azure-vnet CLaDS-vnet \
     --azure-subnet default \
     --azure-subnet-prefix 10.0.0.0/24 \
-    --azure-private-ip-address 10.0.0.11 \
+    --azure-private-ip-address 10.0.0.12 \
     --azure-open-port 80 \
     --azure-custom-data cloud-init.txt \
     clads-annotation-system
