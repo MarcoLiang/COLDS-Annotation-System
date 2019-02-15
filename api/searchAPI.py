@@ -18,15 +18,20 @@ class SearchAPI(Resource):
 		return make_response(render_template('search.html', documents={}), 200, headers)
 
 	def post(self, owner_id, ds_name):
+		print("POST REQUEST RECEIVED")
 		args = parser.parse_args()
 		query = args['query']
 		ranker = args['ranker']
 		num_results = args['num_results']
 		params = args['params']
+		print("ARGS PARSED")
 
 		owner = User.objects(id=owner_id).first()
+		print("USER RETRIEVED")
 
-		path = '/data/annotatable_datasets/' + str(owner.gitlab_id)
+		path = './data/annotatable_datasets/' + str(owner.gitlab_id)
 		searcher = Searcher(ds_name, path)
+		print("SEARCHER CREATED")
 		documents = jsonify(searcher.search(query, ranker, params, num_results))
+		print("SENDING RESPONSE")
 		return make_response(documents)

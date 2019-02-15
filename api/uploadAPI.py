@@ -72,7 +72,7 @@ class UploadAPI(Resource):
 
 	def _get_or_init_owner_path(self):
 		owner = User.objects(id=session["user_id"]).first()
-		owner_path = '/data/annotatable_datasets/' + str(owner.gitlab_id)
+		owner_path = './data/annotatable_datasets/' + str(owner.gitlab_id)
 		
 		if not os.path.exists(owner_path):
 			os.mkdir(owner_path)

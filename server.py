@@ -24,10 +24,10 @@ import requests, os
 
 app = Flask(__name__, static_folder='static/', static_url_path='')
 app.config["SECRET_KEY"] = "secret"
-app.config['MONGODB_SETTINGS'] = {
-    'db': 'prod',
-    'host': 'mongo'
-}
+#app.config['MONGODB_SETTINGS'] = {
+#    'db': 'prod',
+#    'host': 'mongo'
+#}
 api = Api(app)
 
 db.init_app(app)
@@ -101,7 +101,7 @@ def authorized():
 
         session['user_id'] = str(user.id)
 
-        return redirect('/instructor')
+        return redirect('/')
     else:
         return redirect('/logout')
 

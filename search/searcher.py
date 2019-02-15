@@ -54,14 +54,20 @@ class Searcher:
                 print(e)
                 ranker = ranker_cls()
 
+        print("RANKER GOTTEN")
         response = {'query': query, 'results': []}
-        for result in ranker.score(self.idx, q, num_results):
-                response['results'].append({
-                        'score': float(result[1]),
-                        'doc_id': result[0],
-                        'name': self.idx.doc_name(result[0]),
-                        'path': self.idx.doc_path(result[0])
-                })
+        print("SCORING...")
+        results = ranker.score(self.idx, q, num_results)
+        print("SCORING FINISHED")
+        import pdb; pdb.set_trace()
+        for result in results:
+            response['results'].append({
+                    'score': float(result[1]),
+                    'doc_id': result[0],
+                    'name': self.idx.doc_name(result[0]),
+                    'path': self.idx.doc_path(result[0])
+            })
+        print("SCORES GENERATED")
         response['elapsed_time'] = time.time() - start
         return response
 

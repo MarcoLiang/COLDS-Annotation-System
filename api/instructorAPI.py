@@ -24,7 +24,7 @@ class InstructorAPI(Resource):
         authorized_datasets = Dataset.objects(privacy='private', collaborators__in=[user])
 
         classes = [class_.name for class_ in Class.objects(owner=user)]
-        assignments = map(self._collect_assignment_data, Assignment.objects(owner=user))            
+        assignments = list(map(self._collect_assignment_data, Assignment.objects(owner=user)))  
 
         return make_response(render_template(
                 "instructor.html", 
