@@ -67,13 +67,11 @@ class DocumentAPI(Resource):
         assignment = args['assignment']
         document_name = args['document_name']
 
-        user = User.objects(id=session['user_id']).first()
-
         dataset = Dataset.objects(id=assignment['dataset']['$oid']).first()
 
         ds_name = dataset.name
 
-        doc_path = cfg["dataset_base_path"] + str(user.gitlab_id) + "/" + ds_name + "/" + document_name
+        doc_path = cfg["dataset_base_path"] + str(dataset.owner.gitlab_id) + "/" + ds_name + "/" + document_name
         file = open(doc_path, "r")
         document = file.readlines()
         file.close()
