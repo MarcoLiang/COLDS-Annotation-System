@@ -22,9 +22,9 @@ class Searcher:
         :param path: path to dataset (data/author), append ds_name to get full path
         """
         self.default_ranker_cls = metapy.index.OkapiBM25
+        cfg = self.generate_config(ds_name, path)
         cwd = os.getcwd()
         os.chdir(path + "/")
-        cfg = self.generate_config(ds_name, path)
         self.idx = metapy.index.make_inverted_index(cfg)
         os.chdir(cwd)
 
@@ -42,24 +42,25 @@ class Searcher:
         start = time.time()
         q = metapy.index.Document()
         q.content(query)
+    
         try:
-                ranker_cls = getattr(metapy.index, ranker_name)
+            ranker_cls = getattr(metapy.index, ranker_name)
         except Exception as e:
-                print("Couldn't make '{}' ranker, using default.".format(ranker_name))
-                ranker_cls = self.default_ranker_cls
+            print("Couldn't make '{}' ranker, using default.".format(ranker_name))
+            ranker_cls = self.default_ranker_cls
         try:
-                ranker = ranker_cls(**params)
+               ranker = ranker_cls(**params)
         except Exception as e:
-                print("Couldn't make '{}' parameter, using default.".format(params.keys()))
-                print(e)
-                ranker = ranker_cls()
+            print("Couldn't make '{}' parameter, using default.".format(params.keys()))
+            print(e)
+            ranker = ranker_cls()
 
-        print("RANKER GOTTEN")
         response = {'query': query, 'results': []}
+
         print("SCORING...")
         results = ranker.score(self.idx, q, num_results)
         print("SCORING FINISHED")
-        import pdb; pdb.set_trace()
+
         for result in results:
             response['results'].append({
                     'score': float(result[1]),
@@ -67,7 +68,7 @@ class Searcher:
                     'name': self.idx.doc_name(result[0]),
                     'path': self.idx.doc_path(result[0])
             })
-        print("SCORES GENERATED")
+
         response['elapsed_time'] = time.time() - start
         return response
 
@@ -79,7 +80,7 @@ class Searcher:
         Assume line.toml is constructed after uploading
         If already exists, return the config file
         """
-        cfg = ds_name + "/" + ds_name + "-config.toml"
+        cfg = path + "/" + ds_name + "-config.toml"
         if os.path.isfile(cfg):
                 return cfg
         obj = dict()
