@@ -4,7 +4,7 @@ from search.searcher import Searcher
 from schema.User import User
 import os, json
 
-env = os.environ["ENV"]
+env = os.environ["APP_ENV"]
 cfg = json.loads(open('config.json').read())[env]
 
 parser = reqparse.RequestParser()

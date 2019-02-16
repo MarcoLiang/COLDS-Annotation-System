@@ -27,7 +27,7 @@ app.config["SECRET_KEY"] = "secret"
 
 # db settings only need to be specified in production
 # defaults are used in development
-env = os.environ["ENV"]
+env = os.environ["APP_ENV"]
 if env == "prod":
     app.config['MONGODB_SETTINGS'] = {
        'db': 'prod',

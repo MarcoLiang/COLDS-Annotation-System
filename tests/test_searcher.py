@@ -4,7 +4,7 @@ import pytoml as toml
 import os, json
 import shutil
 
-env = os.environ["ENV"]
+env = os.environ["APP_ENV"]
 cfg = json.loads(open('config.json').read())[env]
 
 class TestSearcher(TestCase):
