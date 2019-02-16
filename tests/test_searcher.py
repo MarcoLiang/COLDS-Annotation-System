@@ -1,22 +1,22 @@
 from unittest import TestCase
 from search.searcher import Searcher
 import pytoml as toml
-import os
+import os, json
 import shutil
 
+env = os.environ["ENV"]
+cfg = json.loads(open('config.json').read())[env]
 
 class TestSearcher(TestCase):
 
     def setUp(self):
-        self.author = "test"
-        self.path = os.getcwd() + "/data/" + self.author
-        self.ds_name = "testdata"
-        self.searcher = Searcher(author=self.author, ds_name=self.ds_name, path=self.path)
+        self.path = cfg["dataset_base_path"] + str(1)
+        self.ds_name = "testdataset"
+        self.searcher = Searcher(ds_name=self.ds_name, path=self.path)
 
     def tearDown(self):
         os.remove(self.path+"/"+self.ds_name+"-config.toml")
         shutil.rmtree(self.path+"/"+self.ds_name+"-idx")
-        self.author = ""
         self.path = ""
         self.ds_name = ""
 
@@ -26,7 +26,7 @@ class TestSearcher(TestCase):
         self.searcher.search(query, ranker_name)
 
     def test_generate_config(self):
-        cfg = Searcher.generate_config(self.author, self.ds_name, self.path)
+        cfg = Searcher.generate_config(self.ds_name, self.path)
         with open(cfg, 'rb') as fin:
             obj2 = toml.load(fin)
         obj1 = dict()

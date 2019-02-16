@@ -24,71 +24,59 @@ $(document).ready(function(){
 			"num_results" : 3
 		};
 
-		console.log(search_data)
-
-		console.log("Inititating ajax call.")
 		$.ajax({
-			type: "POST",
-			url: "/search/" + ds_owner_id + "/" + ds_name,
+			type : "POST",
+			url : "/search/" + ds_owner_id + "/" + ds_name,
 			data: JSON.stringify(search_data),
-			contentType: "application/json; charset=utf-8"
-		}).success(function(data) {
-			console.log(data);
+			contentType: 'application/json; charset=utf-8'
+		})
+		.success(function(data){
+			var doc_scores = {}
+			for(var i = 0; i < data.results.length; i++){
+				var doc_name = data.results[i].name;
+				doc_name = doc_name.substring(0, doc_name.length - 4);
+				var doc_score = data.results[i].score;
+				doc_scores[doc_name] = doc_score;
+			}
+
+			var query_data = {
+				"query" : query_content,
+				"doc_scores" : doc_scores,
+				"assignment_id" : assignment_id,
+				"user_id" : user_id
+			};
+
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url: "/query",
+				data: JSON.stringify(query_data),
+				contentType: 'application/json; charset=utf-8'
+			})
+			.success(function(){
+				// update view
+				var html = "<div class='panel panel-default result-panel'>" + 
+			    "<div class='panel-heading'><h4>" + query_content + "</h4></div>" + 
+			    "<div class='panel-body' style='padding:0px;'>" +
+			     "<table class='table table-striped'><tbody>";
+
+			    for(var doc_name in doc_scores){
+			    	html += "<tr>" +
+		              "<td><a onclick='get_document_detail(this)' class='document-title' data-toggle='modal' data-target='#document-modal'>" + doc_name + ".txt</a></td>" + 
+		              "<td>" + 
+		                "<div class='label' id='" + query_content + "-" + doc_name + "'>" + 
+		                  "<div><input type='radio' name='" + query_content + "-" + doc_name + "-label-name' value='relevant'> &nbsp;Relevant</div>" + 
+		                  "<div style='margin-left:20px;'><input type='radio' name='" + query_content + "-" + doc_name + "-label-name' value='irrelevant'> &nbsp;Not Relevant</div>" + 
+		                "</div>" + 
+		              "</td>" + 
+		            "</tr>";
+			    }
+
+			    html += "</tbody></table></div></div>";
+			    $("#submit-btn").before(html);
+			})
+
 		});
-
-		// $.ajax({
-		// 	type : "POST",
-		// 	url : "/search/" + ds_owner_id + "/" + ds_name,
-		// 	data: JSON.stringify(search_data),
-		// 	contentType: 'application/json; charset=utf-8'
-		// })
-		// .success(function(data){
-		// 	var doc_scores = {}
-		// 	for(var i = 0; i < data.results.length; i++){
-		// 		var doc_name = data.results[i].name;
-		// 		doc_name = doc_name.substring(0, doc_name.length - 4);
-		// 		var doc_score = data.results[i].score;
-		// 		doc_scores[doc_name] = doc_score;
-		// 	}
-
-		// 	var query_data = {
-		// 		"query" : query_content,
-		// 		"doc_scores" : doc_scores,
-		// 		"assignment_id" : assignment_id,
-		// 		"user_id" : user_id
-		// 	};
-
-		// 	$.ajax({
-		// 		type: "POST",
-		// 		dataType: "json",
-		// 		url: "/query",
-		// 		data: JSON.stringify(query_data),
-		// 		contentType: 'application/json; charset=utf-8'
-		// 	})
-		// 	.success(function(){
-		// 		// update view
-		// 		var html = "<div class='panel panel-default result-panel'>" + 
-		// 	    "<div class='panel-heading'><h4>" + query_content + "</h4></div>" + 
-		// 	    "<div class='panel-body' style='padding:0px;'>" +
-		// 	     "<table class='table table-striped'><tbody>";
-
-		// 	    for(var doc_name in doc_scores){
-		// 	    	html += "<tr>" +
-		//               "<td><a onclick='get_document_detail(this)' class='document-title' data-toggle='modal' data-target='#document-modal'>" + doc_name + ".txt</a></td>" + 
-		//               "<td>" + 
-		//                 "<div class='label' id='" + query_content + "-" + doc_name + "'>" + 
-		//                   "<div><input type='radio' name='" + query_content + "-" + doc_name + "-label-name' value='relevant'> &nbsp;Relevant</div>" + 
-		//                   "<div style='margin-left:20px;'><input type='radio' name='" + query_content + "-" + doc_name + "-label-name' value='irrelevant'> &nbsp;Not Relevant</div>" + 
-		//                 "</div>" + 
-		//               "</td>" + 
-		//             "</tr>";
-		// 	    }
-
-		// 	    html += "</tbody></table></div></div>";
-		// 	    $("#submit-btn").before(html);
-		// 	})
-
-		// });
 	})
 
 

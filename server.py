@@ -18,16 +18,22 @@ from api.classAPI import ClassAPI
 
 from util.exception import InvalidUsage
 
-from flask import render_template, url_for, session, redirect
+from flask import render_template, url_for, session, redirect, make_response, current_app
 from authlib.flask.client import OAuth
 import requests, os
 
 app = Flask(__name__, static_folder='static/', static_url_path='')
 app.config["SECRET_KEY"] = "secret"
-app.config['MONGODB_SETTINGS'] = {
-   'db': 'prod',
-   'host': 'mongo'
-}
+
+# db settings only need to be specified in production
+# defaults are used in development
+env = os.environ["ENV"]
+if env == "prod":
+    app.config['MONGODB_SETTINGS'] = {
+       'db': 'prod',
+       'host': 'mongo'
+    }
+
 api = Api(app)
 
 db.init_app(app)

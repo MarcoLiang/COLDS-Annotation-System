@@ -1,10 +1,11 @@
-from flask import make_response, render_template, session, jsonify, redirect
+from flask import make_response, render_template, session, jsonify, redirect, current_app
 from flask_restful import Resource, reqparse
 from schema.Dataset import Dataset
 
 from schema.User import User
 from schema.Query import Query
 from schema.Assignment import Assignment
+import os, metapy
 
 parser = reqparse.RequestParser()
 parser.add_argument('name', type=str)

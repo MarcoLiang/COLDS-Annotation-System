@@ -12,6 +12,9 @@ from util.userAuth import login_auth_required
 
 import os, json
 
+env = os.environ["ENV"]
+cfg = json.loads(open('config.json').read())[env]
+
 parser = reqparse.RequestParser()
 parser.add_argument('ds_name', type=str)
 parser.add_argument('ds_privacy', type=str)
@@ -72,7 +75,7 @@ class UploadAPI(Resource):
 
 	def _get_or_init_owner_path(self):
 		owner = User.objects(id=session["user_id"]).first()
-		owner_path = '/data/annotatable_datasets/' + str(owner.gitlab_id)
+		owner_path = cfg["dataset_base_path"] + str(owner.gitlab_id)
 		
 		if not os.path.exists(owner_path):
 			os.mkdir(owner_path)

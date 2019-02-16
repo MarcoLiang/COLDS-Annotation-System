@@ -57,9 +57,7 @@ class Searcher:
 
         response = {'query': query, 'results': []}
 
-        print("SCORING...")
         results = ranker.score(self.idx, q, num_results)
-        print("SCORING FINISHED")
 
         for result in results:
             response['results'].append({

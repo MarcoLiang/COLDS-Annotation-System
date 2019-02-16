@@ -4,6 +4,9 @@ from search.searcher import Searcher
 from schema.User import User
 import os, json
 
+env = os.environ["ENV"]
+cfg = json.loads(open('config.json').read())[env]
+
 parser = reqparse.RequestParser()
 parser.add_argument('query', type=str)
 parser.add_argument('ranker', type=str)
@@ -26,8 +29,7 @@ class SearchAPI(Resource):
 
 		owner = User.objects(id=owner_id).first()
 
-		path = "/data/annotatable_datasets/" + str(owner.gitlab_id)
-		
+		path = cfg["dataset_base_path"] + str(owner.gitlab_id)
 		searcher = Searcher(ds_name, path)
 		documents = jsonify(searcher.search(query, ranker, params, num_results))
 		return make_response(documents)

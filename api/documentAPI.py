@@ -8,6 +8,11 @@ from schema.Document import Document
 from schema.Annotation import Annotation
 from schema.Query import Query
 
+import os, json
+
+env = os.environ["ENV"]
+cfg = json.loads(open('config.json').read())[env]
+
 parser = reqparse.RequestParser()
 
 parser.add_argument('assignment_id', type=str)
@@ -62,12 +67,14 @@ class DocumentAPI(Resource):
         assignment = args['assignment']
         document_name = args['document_name']
 
+        user = User.objects(id=session['user_id']).first()
+
         dataset = Dataset.objects(id=assignment['dataset']['$oid']).first()
 
         ds_name = dataset.ds_name
         author_name = dataset.author.name
 
-        doc_path = current_app.root_path + "/data/" + author_name + "/" + ds_name + "/" + document_name
+        doc_path = cfg["dataset_base_path"] + str(user.gitlab_id) + "/" + ds_name + "/" + document_name
         file = open(doc_path, "r")
         document = file.readlines()
         file.close()
