@@ -5,5 +5,4 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 ENV APP_ENV=prod
-VOLUME /data/annotatable_datasets
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "wsgi:app"]

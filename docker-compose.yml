@@ -7,7 +7,9 @@ services:
             dockerfile: ./docker/mainapp/Dockerfile
         volumes:
             - "/data:/data:ro"
+            - "/data/annotatable_datasets:/data/annotatable_datasets"
             - "/srv/mainapp/artifacts:/srv/mainapp/artifacts"
+
         ports:
             - "8000:8000"
         links:
