@@ -9,3 +9,4 @@ class Assignment(db.DynamicDocument):
     ranker = db.StringField(required=True)
     params = db.DictField(required=True)
     deadline = db.StringField(required=True)
+    num_results = db.IntField(required=True)

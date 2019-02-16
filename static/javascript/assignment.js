@@ -21,7 +21,7 @@ $(document).ready(function(){
 			"query" : query_content,
 			"ranker" : assignment.ranker,
 			"params" : assignment.params,
-			"num_results" : 3
+			"num_results" : assignment.num_results
 		};
 
 		$.ajax({

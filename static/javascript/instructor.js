@@ -81,12 +81,14 @@ $(document).ready(function(){
 
 		// create assignment
 		var assign_data = {
-			"name" : name,
-			"dataset" : ds_id,
-			"ranker" : ranker,
-			"params" : params,
-			"deadline" : deadline,
+			"name": name,
+			"dataset": ds_id,
+			"ranker": ranker,
+			"params": params,
+			"deadline": deadline,
+			"num_results": num_results
 		};
+
 		// send data to create new assignment
 		$.ajax({
 			type: "POST",

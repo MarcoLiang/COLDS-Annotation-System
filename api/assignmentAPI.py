@@ -18,6 +18,7 @@ parser.add_argument('status', type=bool)
 parser.add_argument('content', type=str)
 parser.add_argument('creator', type=str)
 parser.add_argument('doc_scores', type=dict)
+parser.add_argument('num_results', type=int)
 
 
 class AssignAPI(Resource):
@@ -30,6 +31,9 @@ class AssignAPI(Resource):
         dataset = args['dataset']
         deadline = args['deadline']
         doc_scores = args['doc_scores']
+        num_results = args['num_results']
+
+        print(num_results)
  
         assignment = Assignment()
         assignment.name = name
@@ -40,6 +44,7 @@ class AssignAPI(Resource):
         assignment.annotators = User.objects()
         assignment.statuses = {str(anno.id): False for anno in assignment.annotators}
         assignment.deadline = deadline
+        assignment.num_results = num_results
         assignment.save()
 
         return str(assignment.id)
