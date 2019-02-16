@@ -1,4 +1,4 @@
-from flask import make_response, render_template, current_app, jsonify
+from flask import make_response, render_template, current_app, jsonify, session
 from flask_restful import Resource, reqparse
 
 from schema.User import User
@@ -71,8 +71,7 @@ class DocumentAPI(Resource):
 
         dataset = Dataset.objects(id=assignment['dataset']['$oid']).first()
 
-        ds_name = dataset.ds_name
-        author_name = dataset.author.name
+        ds_name = dataset.name
 
         doc_path = cfg["dataset_base_path"] + str(user.gitlab_id) + "/" + ds_name + "/" + document_name
         file = open(doc_path, "r")

@@ -68,7 +68,7 @@ class AssignmentAPI(Resource):
         assignment.ds_name = assignment.dataset.name
         assignment.ds_owner_id = str(assignment.dataset.owner.id)
 
-        queries = Query.objects(assignment=assignment)
+        queries = Query.objects(assignment=assignment, creator=user)
         return make_response(
             render_template(
                 "assignment.html",
