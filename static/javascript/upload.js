@@ -48,7 +48,6 @@ $("#submit-btn").click(function(){
         url: "/upload",
         type: 'POST',
         data: formData,
-        async: false,
         success: function (data) {
             $(".files-container").html("");
         },
@@ -56,8 +55,8 @@ $("#submit-btn").click(function(){
         contentType: false,
         processData: false,
 
-        success: function(data){
-        	alert(data.message)
+        success: function(data) {
+            alert("Dataset is uploading. It will be available on the instructor home page when the upload is complete.")
         }
     });
 });
