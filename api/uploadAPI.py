@@ -117,8 +117,14 @@ class UploadAPI(Resource):
             else:
                 fzip = files[0]
                 fzip.save('/tmp/' + fzip.filename)
+
                 zip_ref = zipfile.ZipFile('/tmp/' + fzip.filename, 'r')
-                zip_ref.extractall(ds_path)
+                for zip_info in zip_ref.infolist():
+                    if zip_info.filename[-1] == '/':
+                        continue
+                    zip_info.filename = os.path.basename(zip_info.filename)
+                    zip_ref.extract(zip_info, ds_path)
+                
                 zip_ref.close()
                 os.remove('/tmp/' + fzip.filename)
 
