@@ -5,3 +5,4 @@ class Query(db.DynamicDocument):
     assignment = db.ReferenceField('Assignment', required=True)
     doc_scores = db.DictField(required=True)
     creator = db.ReferenceField('User', required=True)
+    submitted = db.BooleanField(required=True)

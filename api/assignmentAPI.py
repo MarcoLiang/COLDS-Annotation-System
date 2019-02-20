@@ -32,8 +32,6 @@ class AssignAPI(Resource):
         deadline = args['deadline']
         doc_scores = args['doc_scores']
         num_results = args['num_results']
-
-        print(num_results)
  
         assignment = Assignment()
         assignment.name = name
@@ -61,14 +59,15 @@ class AssignmentAPI(Resource):
         assignment = Assignment.objects(name=assignment_name)  \
             .filter(owner=owner).first()
 
-        if assignment.statuses[str(user_id)]:
-            return redirect("/annotator")
+        # Allow re-submission
+        #if assignment.statuses[str(user_id)]:
+        #    return redirect("/annotator")
 
         assignment.owner_name = assignment.owner.name
         assignment.ds_name = assignment.dataset.name
         assignment.ds_owner_id = str(assignment.dataset.owner.id)
 
-        queries = Query.objects(assignment=assignment, creator=user)
+        queries = Query.objects(assignment=assignment, creator=user, submitted=False)
         return make_response(
             render_template(
                 "assignment.html",
@@ -88,7 +87,6 @@ class AssignmentUpdateAPI(Resource):
 
         assignment = Assignment.objects(id=assignment_id).first()
 
-        import pdb; pdb.set_trace()
         name = args['name']
         query = args['query']
         ranker = args['ranker']
@@ -124,5 +122,6 @@ class AddQueryAPI(Resource):
         query.content = content
         query.data_set = dataset[0]
         query.creator = creator[0]
+        query.submitted = False
         query.save()
         return make_response(jsonify("succeed"), 200, headers)

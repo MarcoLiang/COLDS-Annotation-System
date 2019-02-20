@@ -83,6 +83,7 @@ $(document).ready(function(){
 	// send annotations
 	$("#submit-btn").click(function(){
 		var annotations = {};
+        var complete = true;
 
 		// judge if the student finish annotation or not
 		// var labels = $("tbody").find(".label");
@@ -99,8 +100,8 @@ $(document).ready(function(){
                 var proc_id = id.split(" ").join("\\ ");
 				var input_name = "input[name=" + proc_id + "-label-name]:checked";
 				if(!$(input_name).val()){
-					alert("Please finish assignment");
-					return true;
+                    complete = false;
+                    return;
 				}
 
 				doc_name = id.split("-")[1];
@@ -109,6 +110,11 @@ $(document).ready(function(){
 
 			annotations[query_content] = apq;
 		});
+
+        if (!complete || Object.keys(annotations).length == 0) {
+			alert("Please finish assignment");
+            return;
+        }
 
 		var data = {
 			"assignment_id" : assignment["_id"]["$oid"],

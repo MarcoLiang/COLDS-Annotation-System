@@ -25,16 +25,15 @@ class AnnotationAPI(Resource):
         annotations = args['annotations']
         user_id = session['user_id']
 
-        if assignment.statuses[str(user_id)]:
-            return make_response(jsonify("Failed: Already submitted assignment"), 200)
+        # Allow re-submission
+        #if assignment.statuses[str(user_id)]:
+        #    return make_response(jsonify("Failed: Already submitted assignment"), 200)
 
         annotator = User.objects(id=user_id).first()
 
         for query_content in annotations:
             query = Query.objects(assignment=assignment, content=query_content).first()
-
             apq = annotations[query_content]
-
 
             for file_name in apq:
                 label = apq[file_name]
@@ -50,7 +49,8 @@ class AnnotationAPI(Resource):
                 a.judgement = label
                 a.query = query
                 a.save()
-
+            
+            Query.objects(id=query.id).update(submitted=True)
 
         # student has completed the assignment
         cstatus = assignment.statuses

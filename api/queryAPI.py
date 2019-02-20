@@ -12,24 +12,25 @@ parser.add_argument('assignment_id', type=str)
 parser.add_argument('doc_scores', type=dict)
 
 class QueryAPI(Resource):
-	def post(self):
-		args = parser.parse_args()
+    def post(self):
+        args = parser.parse_args()
 
-		query_content = args['query']
-		assignment_id = args['assignment_id']
-		user_id = args['user_id']
-		doc_scores = args['doc_scores']
+        query_content = args['query']
+        assignment_id = args['assignment_id']
+        user_id = args['user_id']
+        doc_scores = args['doc_scores']
 
-		assignment = Assignment.objects(id=assignment_id).first()
-		creator = User.objects(id=user_id).first()
+        assignment = Assignment.objects(id=assignment_id).first()
+        creator = User.objects(id=user_id).first()
 
-		query = Query()
-		query.content = query_content
-		query.assignment = assignment
-		query.doc_scores = doc_scores
-		query.creator = creator
-		query.save()
+        query = Query()
+        query.content = query_content
+        query.assignment = assignment
+        query.doc_scores = doc_scores
+        query.creator = creator
+        query.submitted = False
+        query.save()
 
-		return "OK"
+        return "OK"
 
 		

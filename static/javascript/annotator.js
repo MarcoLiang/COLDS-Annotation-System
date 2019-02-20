@@ -33,11 +33,14 @@ $(document).ready(function(){
 
 		// remind user if this assignment have been finished already
 		if(curr_assignment.complete) {
-			$("#nav-assignment-btn").css("display", "none");
+            // Allow re-submission
+            // $("#nav-assignment-btn").css("display", "none");
+            $("#nav-assignment-btn").html("Resubmit");
             $("#complete-text").css("display", "block");
 		} else {
             $("#complete-text").css("display", "none");
 		    $("#nav-assignment-btn").css("display", "inline-block");
+            $("#nav-assignment-btn").html("Start");
         }
 	});
 
