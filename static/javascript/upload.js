@@ -52,6 +52,7 @@ $("#submit-btn").click(function(){
         contentType: false,
         processData: false,
         success: function(data) {
+            console.log("Dataset is uploading.")
             alert("Dataset is uploading. It will be available on the instructor home page when the upload is complete.");
         }
     });
