@@ -61,9 +61,15 @@ class UploadAPI(Resource):
             if err:
                 return make_response(jsonify(err), 200)
 
-            dataset = self._save_dataset_entry(ds_name, owner, ds_privacy)
-            self._save_dataset_files(uploaded_files, ds_path, dataset, is_zipfile)
+            self._save_dataset_files(uploaded_files, ds_path, is_zipfile)
             self._save_dataset_configs(ds_path)
+            dataset = self._save_dataset_entry(ds_name, owner, ds_privacy)
+
+            for fname in os.listdir(ds_path):
+                document = Document()
+                document.name = fname
+                document.dataset = dataset
+                document.save()
 
             return make_response(
                 jsonify({"message": "Files have been successfully uploaded"}),
@@ -109,7 +115,7 @@ class UploadAPI(Resource):
             return ds
 
 
-	def _save_dataset_files(self, files, ds_path, dataset, is_zipfile):
+	def _save_dataset_files(self, files, ds_path, is_zipfile):
             if not is_zipfile:
                 for file in files:
                     filename = secure_filename(file.filename)
@@ -128,11 +134,6 @@ class UploadAPI(Resource):
                 zip_ref.close()
                 os.remove('/tmp/' + fzip.filename)
 
-            for fname in os.listdir(ds_path):
-                document = Document()
-                document.name = fname
-                document.dataset = dataset
-                document.save()
 
 	def _save_dataset_configs(self, ds_path):
             if len(os.listdir(ds_path)) != 0:

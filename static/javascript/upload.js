@@ -48,15 +48,11 @@ $("#submit-btn").click(function(){
         url: "/upload",
         type: 'POST',
         data: formData,
-        success: function (data) {
-            $(".files-container").html("");
-        },
         cache: false,
         contentType: false,
         processData: false,
-
         success: function(data) {
-            alert("Dataset is uploading. It will be available on the instructor home page when the upload is complete.")
+            alert("Dataset is uploading. It will be available on the instructor home page when the upload is complete.");
         }
     });
 });
