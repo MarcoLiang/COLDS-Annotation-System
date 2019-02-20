@@ -17,7 +17,7 @@ class AnnotatorAPI(Resource):
         user_id = session['user_id'];
         user = User.objects(id=user_id).first()
 
-        assignments = Assignment.objects(annotators__in=[user])
+        assignments = Assignment.objects()
 
         for assignment in assignments:
             assignment['owner_name'] = assignment.owner.name
