@@ -15,6 +15,7 @@ from api.annotatorAPI import AnnotatorAPI
 from api.queryAPI import QueryAPI
 from api.alertAPI import AlertAPI
 from api.classAPI import ClassAPI
+from api.extractAPI import ExtractAPI
 
 from util.exception import InvalidUsage
 
@@ -71,6 +72,7 @@ api.add_resource(ClassAPI, '/class')
 api.add_resource(DatasetUpdateAPI, '/dataset_update')
 
 api.add_resource(AlertAPI, '/alert/<string:url>/<string:message>')
+api.add_resource(ExtractAPI, '/extract')
 
 
 @app.route('/login', methods=["POST"])

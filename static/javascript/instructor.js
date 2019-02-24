@@ -53,6 +53,25 @@ $(document).ready(function(){
 		}
 	});
 
+	$("#extract-btn").click(function() {
+		var ds_id = $('input[name="data_set"]:checked').val();
+		if(ds_id == null){
+			alert("Please select a dataset first.");
+		} else {
+			var extract_data = {"dataset": ds_id}
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url: "/extract",
+				data: JSON.stringify(extract_data),
+				contentType: 'application/json; charset=utf-8'
+			})
+			.success(function(data) {
+				alert(data);
+			});
+		}
+	});
+
 	// new assignment
 	$("#create-assignment-btn").click(function(){
 		// form data
