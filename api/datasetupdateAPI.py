@@ -31,8 +31,8 @@ class DatasetUpdateAPI(Resource):
         user = User.objects(id=session['user_id']).first()
 
         if len(ds_name) > 0:
-            old_ds_path = cfg["dataset_base_path"] + str(user.gitlab_id) + "/" + ds.name
-            new_ds_path = cfg["dataset_base_path"] + str(user.gitlab_id) + "/" + ds_name
+            old_ds_path = cfg["anno_dataset_base_path"] + str(user.gitlab_id) + "/" + ds.name
+            new_ds_path = cfg["anno_dataset_base_path"] + str(user.gitlab_id) + "/" + ds_name
             os.rename(old_ds_path, new_ds_path)
             ds.name = ds_name
 

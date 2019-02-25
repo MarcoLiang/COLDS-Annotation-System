@@ -10,7 +10,7 @@ cfg = json.loads(open('config.json').read())[env]
 class TestSearcher(TestCase):
 
     def setUp(self):
-        self.path = cfg["dataset_base_path"] + str(1)
+        self.path = cfg["anno_dataset_base_path"] + str(1)
         self.ds_name = "testdataset"
         self.searcher = Searcher(ds_name=self.ds_name, path=self.path)
 

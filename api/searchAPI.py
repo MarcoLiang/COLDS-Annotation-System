@@ -29,7 +29,7 @@ class SearchAPI(Resource):
 
 		owner = User.objects(id=owner_id).first()
 
-		path = cfg["dataset_base_path"] + str(owner.gitlab_id)
+		path = cfg["anno_dataset_base_path"] + str(owner.gitlab_id)
 		searcher = Searcher(ds_name, path)
 		documents = jsonify(searcher.search(query, ranker, params, num_results))
 		return make_response(documents)

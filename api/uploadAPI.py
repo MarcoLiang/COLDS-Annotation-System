@@ -89,7 +89,7 @@ class UploadAPI(Resource):
 
 	def _get_or_init_owner_path(self):
             owner = User.objects(id=session["user_id"]).first()
-            owner_path = cfg["dataset_base_path"] + str(owner.gitlab_id)
+            owner_path = cfg["anno_dataset_base_path"] + str(owner.gitlab_id)
             
             if not os.path.exists(owner_path):
                 os.mkdir(owner_path)

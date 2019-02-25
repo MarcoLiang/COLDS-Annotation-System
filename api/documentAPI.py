@@ -71,7 +71,7 @@ class DocumentAPI(Resource):
 
         ds_name = dataset.name
 
-        doc_path = cfg["dataset_base_path"] + str(dataset.owner.gitlab_id) + "/" + ds_name + "/" + document_name
+        doc_path = cfg["anno_dataset_base_path"] + str(dataset.owner.gitlab_id) + "/" + ds_name + "/" + document_name
         file = open(doc_path, "r")
         document = file.readlines()
         file.close()
