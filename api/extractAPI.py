@@ -25,7 +25,7 @@ class ExtractAPI(Resource):
     
         assignments = Assignment.objects(dataset=dataset_id)
         assignment_ids = [a.id for a in assignments]
-        queries = Query.objects(assignment__in=assignment_ids)
+        queries = Query.objects(assignment__in=assignment_ids, submitted=True)
         query_ids = [q.id for q in queries]
 
         to_write = []
@@ -44,7 +44,7 @@ class ExtractAPI(Resource):
             overall_judgements = {}
             is_valid = False
             for doc_num in judgements:
-                judgem = sum(judgements[doc_num]) / len(judgements[doc_num])
+                judgem = int(round(float(sum(judgements[doc_num])) / len(judgements[doc_num])))
                 if judgem > 0:
                     overall_judgements[doc_num] = judgem
                     is_valid = True
@@ -101,18 +101,17 @@ class ExtractAPI(Resource):
 
     
     def _copy_dataset(self, old_dataset_path, new_dataset_path):
-        shutil.copytree(old_dataset_path, new_dataset_path)
-
-
-    def _copy_index(self, old_index_path, new_index_path):
-        shutil.copytree(old_index_path, new_index_path)
+        if os.path.isdir(new_dataset_path):
+            print("Dataset already copied")
+        else:
+            shutil.copytree(old_dataset_path, new_dataset_path)
 
 
     def _update_dataset_config(self, ds_path, dataset_name):
         cfg = ds_path + '/' + dataset_name + '/config.toml'
         obj = dict()
         obj['prefix'] = ds_path
-        obj['stopwords'] = ds_path + '/stopwords.txt'
+        obj['stop-words'] = ds_path + '/stopwords.txt'
         obj['dataset'] = dataset_name
         obj['corpus'] = "file.toml"
         obj['index'] = ds_path + '/idx/' + dataset_name + "-idx"
@@ -121,7 +120,7 @@ class ExtractAPI(Resource):
         analyzer = obj['analyzers'][0]
         analyzer['ngram'] = 1
         analyzer['method'] = "ngram-word"
-        analyzer['filter'] = {'type': "default-unigram-chain"}
+        analyzer['filter'] = "default-unigram-chain"
 
         obj['query-runner'] = dict()
         obj['query-runner']['query-path'] = ds_path + '/' + dataset_name + '/' + dataset_name + '-queries.txt'
