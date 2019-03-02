@@ -7,6 +7,8 @@ import metapy
 import os
 import pytoml as toml
 
+env = os.environ("APP_ENV")
+cfg = json.loads(open('config.json').read())[env]
 
 class Searcher:
     """
@@ -86,11 +88,12 @@ class Searcher:
         obj['dataset'] = ds_name
         obj['corpus'] = "file.toml"
         obj['index'] = ds_name + "-idx"
+        obj['stop-words'] = cfg["perm_dataset_base_path"] + "/stopwords.txt"
         obj['analyzers'] = [dict()]
         analyzer = obj['analyzers'][0]
         analyzer['ngram'] = 1
         analyzer['method'] = "ngram-word"
-        analyzer['filter'] = [{'type': "icu-tokenizer"}, {'type': "lowercase"}]
+        analyzer['filter'] = "default-unigram-chain"
         with open(cfg, 'w+') as f:
                 toml.dump(f, obj)
         return cfg
