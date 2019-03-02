@@ -28,31 +28,34 @@ class ExtractAPI(Resource):
         queries = Query.objects(assignment__in=assignment_ids, submitted=True)
         query_ids = [q.id for q in queries]
 
+        metadata_filepath = cfg["anno_dataset_base_path"] + str(dataset.owner.gitlab_id) + "/" + dataset.name + "/metadata.data"
+        doc_ids = self._get_doc_ids(metadata_filepath)
+
         to_write = []
         valid_query_num = 0
         for query_id in query_ids:
             annotations = Annotation.objects(query=query_id)
             judgements = {}
             for a in annotations:
-                doc_num = a.document.name[:-4]
+                doc_id = doc_ids[a.document.name]
                 judge_score = 1 if a.judgement == "relevant" else 0
-                if doc_num in judgements:
-                    judgements[doc_num].append(judge_score)
+                if doc_id in judgements:
+                    judgements[doc_id].append(judge_score)
                 else:
-                    judgements[doc_num] = [judge_score]
+                    judgements[doc_id] = [judge_score]
             
             overall_judgements = {}
             is_valid = False
-            for doc_num in judgements:
-                judgem = int(round(float(sum(judgements[doc_num])) / len(judgements[doc_num])))
+            for doc_id in judgements:
+                judgem = int(round(float(sum(judgements[doc_id])) / len(judgements[doc_id])))
                 if judgem > 0:
-                    overall_judgements[doc_num] = judgem
+                    overall_judgements[doc_id] = judgem
                     is_valid = True
 
             if is_valid:
                 entries = {"docs": [], "query_id": query_id}
-                for doc_num in overall_judgements:
-                    entry = (valid_query_num, doc_num, overall_judgements[doc_num])
+                for doc_id in overall_judgements:
+                    entry = (valid_query_num, doc_id, overall_judgements[doc_id])
                     entries["docs"].append(entry)
                 to_write.append(entries)
                 valid_query_num += 1
@@ -79,6 +82,20 @@ class ExtractAPI(Resource):
         return make_response(jsonify(response))
 
 
+    def _get_doc_ids(self, metadata_filepath):
+        doc_ids = {}
+        lines = []
+        with open(metadata_filepath, 'r') as f:
+            lines = f.readlines()
+            f.close()
+
+        for i in range(len(lines)):
+            doc_name = lines[i].split(" ")[0]
+            doc_ids[doc_name] = i
+
+        return doc_ids
+
+
     def _write_query_files(self, to_write, queries_filepath, qrels_filepath):
         if os.path.isfile(queries_filepath):
             os.remove(queries_filepath)
@@ -95,8 +112,8 @@ class ExtractAPI(Resource):
 
             with open(qrels_filepath, 'a') as f:
                 for entry in entries["docs"]:
-                    qnum, doc_num, judgement = entry
-                    f.write(str(qnum) + " " + str(doc_num) + " " + str(judgement) + "\n")
+                    qnum, doc_id, judgement = entry
+                    f.write(str(qnum) + " " + str(doc_id) + " " + str(judgement) + "\n")
                 f.close()
 
     
