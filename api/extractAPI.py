@@ -35,8 +35,6 @@ class ExtractAPI(Resource):
         valid_query_num = 0
         for query_id in query_ids:
             annotations = Annotation.objects(query=query_id)
-            if len(annotations) < 40:
-                continue
 
             judgements = {}
             for a in annotations:
