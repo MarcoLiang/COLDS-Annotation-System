@@ -7,7 +7,7 @@ import metapy
 import os
 import pytoml as toml
 
-env = os.environ("APP_ENV")
+env = os.environ["APP_ENV"]
 cfg = json.loads(open('config.json').read())[env]
 
 class Searcher:
